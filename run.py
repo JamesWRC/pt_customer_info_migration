@@ -131,8 +131,8 @@ if __name__ == '__main__':
     uniqueClient = dict()
 
     print('Parsing CSV...')
-    with open(csv_file, 'r') as csv_file:
-        csv_reader = csv.reader(csv_file)
+    with open(csv_file, 'r', encoding='utf-8') as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=',', dialect=csv.excel_tab)
         next(csv_reader) # skip header
 
         # Get line and line index from csv_reader
