@@ -1,9 +1,11 @@
 import os
 import csv
 import json
+import re
 
 from pyhtml2pdf import converter
 import multiprocessing
+
 csv_file = os.getcwd() + '/data.csv'
 
 if not os.path.exists(csv_file):
@@ -126,6 +128,21 @@ def htmlToPDFWorker(work):
             print('Keyboard interrupt')
             exit()
 
+def sanitize_file_path(file_path):
+    # Replace invalid characters with underscore
+    file_path = re.sub(r'[\\/*?:"<>|]', '_', file_path)
+    
+    # Split the path into components
+    path_parts = file_path.split(os.sep)
+    
+    # Sanitize each component
+    path_parts = [re.sub(r'[\0\t\n\r\x0b\x0c]', '', part) for part in path_parts]
+    
+    # Join the components back together
+    sanitized_path = os.path.join(*path_parts)
+    
+    return sanitized_path
+
 if __name__ == '__main__':
     multiprocessing.set_start_method('spawn')
     uniqueClient = dict()
@@ -192,6 +209,9 @@ if __name__ == '__main__':
             html = renderPDFHTML(uniqueClient[key])
 
             fileName = f"{uniqueClient[key][0].get('FirstName')}_{uniqueClient[key][0].get('LastName')}"
+
+            # sanitize file path
+            fileName = sanitize_file_path(fileName)
 
             htmlFilePath = os.path.join(os.getcwd(), 'html', key, fileName + '.html')
 
