@@ -202,7 +202,7 @@ if __name__ == '__main__':
                 os.makedirs(os.path.dirname(htmlFilePath), exist_ok=True)
 
             # write file
-            with open(htmlFilePath, 'w') as f:
+            with open(htmlFilePath, 'w', encoding='utf-8') as f:
                 f.write(html)
 
             htmlFiles.append(htmlFilePath)
